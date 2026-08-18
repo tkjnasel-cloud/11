@@ -1,0 +1,689 @@
+/* =====================================================
+   RESET & BASE
+===================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+    background: radial-gradient(
+        circle at 50% 45%,
+        #142b4d 0%,
+        #0a1a31 32%,
+        #030b17 68%,
+        #01040a 100%
+    );
+}
+
+/* =====================================================
+   PAGE & TURNTABLE CONTAINER
+===================================================== */
+
+.page {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.turntable {
+    position: relative;
+    width: 950px;
+    height: 650px;
+    border-radius: 28px;
+    background: linear-gradient(
+        145deg,
+        #1b304c 0%,
+        #10233c 25%,
+        #071426 60%,
+        #020811 100%
+    );
+    border: 1px solid rgba(120, 170, 225, 0.22);
+    box-shadow:
+        0 45px 100px rgba(0, 0, 0, 0.85),
+        inset 0 1px 1px rgba(255, 255, 255, 0.08);
+}
+
+/* =========================================
+   ALBUM COVER
+========================================= */
+
+.album-cover {
+    position: absolute;
+    width: 340px;
+    height: 340px;
+    left: 105px;
+    top: 145px;
+    overflow: hidden;
+    border-radius: 6px;
+    background: #101d2e;
+
+    z-index: 10;
+    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.55);
+}
+
+.album-cover img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+/* =========================================
+   VINYL (POSISI AWAL)
+========================================= */
+
+.vinyl {
+    position: absolute;
+    width: 340px;
+    height: 340px;
+
+    left: 285px;
+    top: 145px;
+
+    z-index: 5;
+
+    transition: 
+        z-index 0.3s ease,
+        transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+        filter 0.5s ease;
+}
+
+.vinyl.playing {
+    left: 285px;
+    top: 145px;
+
+    z-index: 20;
+
+    transform: translateY(-8px);
+
+    filter: drop-shadow(0 20px 25px rgba(0, 0, 0, 0.7));
+}
+
+.vinyl.playing .vinyl-disc {
+    animation: vinylSpin 1.8s linear infinite;
+}
+
+@keyframes vinylSpin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* =====================================================
+   VINYL DISC DETAILS
+===================================================== */
+
+.vinyl-disc {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        #555d67 0%,
+        #343c45 4%,
+        #070a0f 5%,
+        #020407 14%,
+        #0b0e13 35%,
+        #020305 72%,
+        #080b10 100%
+    );
+    box-shadow:
+        0 25px 50px rgba(0, 0, 0, 0.85),
+        inset -10px -10px 20px rgba(0, 0, 0, 0.75),
+        inset 5px 5px 15px rgba(255, 255, 255, 0.04);
+}
+
+.grooves {
+    position: absolute;
+    inset: 5px;
+    border-radius: 50%;
+    background: repeating-radial-gradient(
+        circle,
+        transparent 0px,
+        transparent 3px,
+        rgba(255, 255, 255, 0.055) 3.5px,
+        transparent 5px
+    );
+}
+
+.vinyl-reflection {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: linear-gradient(
+        125deg,
+        transparent 25%,
+        transparent 40%,
+        rgba(255, 255, 255, 0.02) 44%,
+        rgba(255, 255, 255, 0.13) 50%,
+        rgba(255, 255, 255, 0.02) 56%,
+        transparent 63%
+    );
+}
+
+.record-label {
+    position: absolute;
+    width: 88px;
+    height: 88px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: radial-gradient(
+        circle,
+        #69727d,
+        #404952 60%,
+        #252d35
+    );
+    color: #e4ebf2;
+}
+
+.record-label span {
+    font-size: 7px;
+    letter-spacing: 3px;
+}
+
+.record-label small {
+    margin-top: 6px;
+    font-size: 5px;
+    letter-spacing: 1px;
+    opacity: 0.65;
+}
+
+.center-hole {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: #020406;
+}
+
+/* =====================================================
+   TONEARM
+===================================================== */
+
+.tonearm {
+    position: absolute;
+    width: 390px;
+    height: 150px;
+    right: 20px;
+    top: 55px;
+    z-index: 30;
+
+    --tonearm-angle: 0deg;
+    transform: rotate(var(--tonearm-angle));
+    transform-origin: 340px 75px;
+
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+}
+
+.tonearm-base {
+    position: absolute;
+    width: 82px;
+    height: 82px;
+    left: 299px;
+    top: 34px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle at 35% 30%,
+        #a3adb7,
+        #5c6772 23%,
+        #29343f 50%,
+        #080e15 100%
+    );
+    border: 1px solid rgba(220, 235, 250, 0.2);
+    box-shadow:
+        0 12px 25px rgba(0, 0, 0, 0.8),
+        inset 2px 2px 5px rgba(255, 255, 255, 0.15),
+        inset -5px -5px 10px rgba(0, 0, 0, 0.8);
+}
+
+.base-ring {
+    position: absolute;
+    width: 42px;
+    height: 42px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 2px solid rgba(180, 195, 210, 0.6);
+}
+
+.base-center {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, #aab4bd, #323c46);
+}
+
+.arm {
+    position: absolute;
+    left: 60px;
+    top: 69px;
+    width: 255px;
+    height: 14px;
+    border-radius: 20px;
+    background: linear-gradient(
+        to bottom,
+        #f4f7f9 0%,
+        #cbd2d8 20%,
+        #858f99 50%,
+        #3d4751 78%,
+        #121920 100%
+    );
+    box-shadow:
+        0 7px 13px rgba(0, 0, 0, 0.7),
+        inset 0 1px 2px rgba(255, 255, 255, 0.7);
+}
+
+.arm-highlight {
+    position: absolute;
+    left: 5%;
+    top: 2px;
+    width: 90%;
+    height: 3px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.45);
+}
+
+.cartridge {
+    position: absolute;
+    left: 27px;
+    top: 61px;
+    width: 58px;
+    height: 40px;
+    border-radius: 5px;
+    background: linear-gradient(
+        145deg,
+        #737e89,
+        #414b55 40%,
+        #121920 80%,
+        #070b10
+    );
+    box-shadow:
+        0 8px 14px rgba(0, 0, 0, 0.75),
+        inset 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.screw {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #080c11;
+}
+
+.screw-1 { left: 13px; top: 9px; }
+.screw-2 { left: 27px; top: 9px; }
+
+.needle {
+    position: absolute;
+    width: 2px;
+    height: 28px;
+    left: 4px;
+    bottom: -25px;
+    background: linear-gradient(to bottom, #f5f7f8, #69747e);
+    transform: rotate(8deg);
+}
+
+.needle::after {
+    content: "";
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    left: -2px;
+    bottom: -3px;
+    border-radius: 50%;
+    background: #020406;
+}
+
+/* =====================================================
+   DRAG ME & NOW PLAYING
+===================================================== */
+
+.drag-me {
+    position: absolute;
+    top: 72px;
+    right: 220px;
+    z-index: 50;
+    text-align: center;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.drag-me span {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: rgba(210, 225, 240, 0.78);
+}
+
+.drag-arrow {
+    width: 8px;
+    height: 8px;
+    margin: 9px auto 0;
+    border-right: 1px solid #7da6d2;
+    border-bottom: 1px solid #7da6d2;
+    transform: rotate(45deg);
+}
+
+.drag-me.hidden {
+    opacity: 0;
+}
+
+.now-playing {
+    position: absolute;
+    left: 105px;
+    bottom: 40px;
+    width: 320px;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events: none;
+    z-index: 30;
+}
+
+.now-playing.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.playing-line {
+    width: 35px;
+    height: 2px;
+    margin-bottom: 10px;
+    background: #70a2d7;
+    box-shadow: 0 0 8px rgba(80, 140, 210, 0.6);
+}
+
+.playing-label {
+    font-size: 8px;
+    letter-spacing: 4px;
+    color: rgba(160, 195, 230, 0.7);
+    margin-bottom: 5px;
+}
+
+.song-title {
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    color: #edf5ff;
+}
+
+.artist-name {
+    margin-top: 3px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: rgba(190, 210, 235, 0.55);
+}
+
+/* =====================================================
+   KONTROL AUDIO (PAUSE & SEEKBAR)
+===================================================== */
+
+.player-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.control-btn {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #edf5ff;
+    min-width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    transition: background 0.2s ease;
+}
+
+.control-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.progress-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 100%;
+}
+
+#seek-bar {
+    width: 100%;
+    height: 4px;
+    accent-color: #70a2d7;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+}
+
+.time-display {
+    font-size: 9px;
+    color: rgba(190, 210, 235, 0.65);
+    letter-spacing: 1px;
+}
+
+/* =====================================================
+   INSTRUCTION & DECORATION
+===================================================== */
+
+.instruction {
+    position: absolute;
+    left: 50%;
+    bottom: 27px;
+    transform: translateX(-50%);
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: rgba(135, 175, 225, 0.6);
+}
+
+.blue-dot {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #4673a5;
+    box-shadow: 0 0 10px rgba(60, 120, 200, 0.65);
+}
+
+.dot-left { left: 38px; top: 38px; }
+.dot-right { right: 38px; bottom: 38px; }
+
+@media (max-width: 768px) {
+    .turntable {
+        transform: scale(0.58);
+    }
+}
+
+/* =====================================================
+   TOMBOL NEXT & BIRTHDAY PAGE
+===================================================== */
+
+.hidden {
+    display: none !important;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.next-btn {
+    position: absolute;
+    right: 35px;
+    bottom: 30px;
+    z-index: 60;
+    padding: 10px 22px;
+    background: rgba(112, 162, 215, 0.25);
+    border: 1px solid rgba(112, 162, 215, 0.5);
+    border-radius: 20px;
+    color: #edf5ff;
+    font-size: 12px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.next-btn:hover {
+    background: rgba(112, 162, 215, 0.55);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(112, 162, 215, 0.4);
+}
+
+/* Halaman Ucapan */
+.birthday-page {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at center, #1b304c 0%, #030b17 100%);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.birthday-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 40px 30px;
+    border-radius: 24px;
+    backdrop-filter: blur(12px);
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+}
+
+.birthday-card h1 {
+    color: #edf5ff;
+    font-size: 24px;
+    margin-bottom: 20px;
+    min-height: 32px;
+}
+
+.birthday-card p {
+    color: rgba(190, 210, 235, 0.85);
+    font-size: 14px;
+    line-height: 1.8;
+    margin-bottom: 25px;
+    min-height: 80px;
+    white-space: pre-wrap; /* Biar baris enter terbaca */
+}
+
+/* Kursor Berkedip */
+.cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    background-color: #70a2d7;
+    margin-left: 2px;
+    animation: blink 0.7s infinite;
+    vertical-align: middle;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.back-btn {
+    padding: 10px 20px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #edf5ff;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.3s ease;
+}
+
+.back-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+
+/* =====================================================
+   NYAN CAT FOLLOWING PATH WITH ROTATION
+===================================================== */
+
+.card-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.cat-gift-orbit {
+    position: absolute;
+    width: 75px; /* Sesuaikan ukuran Nyan Cat */
+    height: auto;
+    z-index: 105;
+    pointer-events: none;
+    
+    /* Lintasan mengelilingi kartu ucapan */
+    offset-path: rect(-35px auto calc(100% + 35px) -35px round 30px);
+    
+    /* Mengikuti sudut lintasan (menunduk pas turun, menanjak pas naik) */
+    offset-rotate: auto; 
+    
+    animation: followPath 8s linear infinite;
+}
+
+@keyframes followPath {
+    0% {
+        offset-distance: 0%;
+        transform: scaleY(1);
+    }
+    49.9% {
+        transform: scaleY(1);
+    }
+    50% {
+        offset-distance: 50%;
+        /* Flip vertical pas jalan balik ke kiri agar badannya tidak terbalik/nungging */
+        transform: scaleY(-1);
+    }
+    99.9% {
+        transform: scaleY(-1);
+    }
+    100% {
+        offset-distance: 100%;
+        transform: scaleY(1);
+    }
+}
